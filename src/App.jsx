@@ -144,13 +144,35 @@ export default function App() {
   return (
     <div className="app">
       <header className="topo">
-        <div className="marca">
-          <span className="logo" aria-hidden="true">▤</span>
-          <div>
-            <h1>Impressão de Etiquetas</h1>
-            <p>Procure o produto, escolha a quantidade e imprima.</p>
-          </div>
+        <img className="logo-bourached" src="img/logo-bourached-branco.png" alt="Bourached Distribuidora de Alimentos" />
+        <div className="topo-titulo">
+          <h1>Impressão de Etiquetas</h1>
+          <p>Procure o produto, escolha a quantidade e imprima.</p>
         </div>
+        <img className="logo-saint" src="img/logo-saint-louis.png" alt="Saint Louis" />
+
+        <form
+          className="campo-busca"
+          role="search"
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (visiveis[destaque]) selecionar(visiveis[destaque]);
+          }}
+        >
+          <label className="sr-only" htmlFor="busca">Nome do produto</label>
+          <input
+            id="busca"
+            ref={campoBusca}
+            type="search"
+            placeholder="Buscar produtos…"
+            value={busca}
+            onChange={(e) => setBusca(e.target.value)}
+            onKeyDown={teclaNaBusca}
+            autoComplete="off"
+          />
+          <button type="submit">Pesquisar</button>
+        </form>
+
         <StatusImpressora
           conexao={conexao}
           impressoras={impressoras}
@@ -161,21 +183,19 @@ export default function App() {
         />
       </header>
 
+      <section
+        className="banner"
+        style={{ backgroundImage: "url(img/bourachedStore.jpg)" }}
+        aria-label="Bourached"
+      >
+        <div className="banner-texto">
+          <h2>Etiquetas prontas para imprimir</h2>
+          <p>Envase, validade e lote saem automáticos na hora da impressão.</p>
+        </div>
+      </section>
+
       <main className="corpo">
         <section className="coluna-busca" aria-label="Busca de produtos">
-          <label className="campo-busca">
-            <span className="sr-only">Nome do produto</span>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></svg>
-            <input
-              ref={campoBusca}
-              type="search"
-              placeholder="Digite o nome do produto (ex.: alho, castanha, chimichurri)"
-              value={busca}
-              onChange={(e) => setBusca(e.target.value)}
-              onKeyDown={teclaNaBusca}
-              autoComplete="off"
-            />
-          </label>
 
           {!busca && recentes.length > 0 && (
             <div className="recentes">
