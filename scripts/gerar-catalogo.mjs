@@ -16,6 +16,9 @@ const AVISOS = path.join(RAIZ, "avisos.json");
 // arquivos que não são etiqueta de produto
 const IGNORAR = [/^MODELO PIX/i];
 
+// fornecedor escrito só no nome do arquivo (não sai impresso): aparece no app, ex. "TEMPERO LEMON PEPPER (TOTALBRAZ)"
+const FORNECEDORES = ["TOTALBRAZ"];
+
 const semAcento = (s) => s.normalize("NFD").replace(/[̀-ͯ]/g, "");
 const slug = (s) =>
   semAcento(s).toLowerCase().replace(/\.lbx$/i, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -97,10 +100,11 @@ async function main() {
     const nomeArquivo = arquivo.replace(/\.lbx$/i, "").replace(/[-_]+/g, " ").trim().toUpperCase();
     const nome = nomeDoProduto(caixasDeTexto(xml)) || nomeArquivo;
     const { produto, peso } = separarPeso(nome);
+    const fornecedor = FORNECEDORES.find((f) => nomeArquivo.includes(f));
     itens.push({
       id: s,
       arquivo,
-      produto: produto || nomeArquivo,
+      produto: (produto || nomeArquivo) + (fornecedor ? ` (${fornecedor})` : ""),
       peso,
       validade: validade(xml),
       datasAutomaticas: xml.includes("<text:datetime>"),
